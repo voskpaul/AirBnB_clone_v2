@@ -1,45 +1,109 @@
-Web Framework
-In the backend, we use Flask as the web framework and Jinja as the template.
+Web Flask
+Using a web framework
 
-Resources:
-What is a web framework?
-Flask - Quickstart: Minimal Application, Routing except HTTP methods, Rendering templates
-Jinja - Template Designer: Synopsis, Variables, Comments, Whitespace control, List of Control Structures (read up to Call)
-# import data on cities and states into sql database
-$ curl -o 7-dump.sql "https://s3.amazonaws.com/intranet-projects-files/holbertonschool-higher-level_programming+/290/7-states_list.sql"
-$ cat 7-dump.sql | mysql -uroot -p
-Enter password: 
-$ HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db python3 -m web_flask.8-cities_by_states
-* Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
-....
-# import data on places into sql database
-$ curl -o 10-dump.sql "https://s3.amazonaws.com/intranet-projects-files/holbertonschool-higher-level_programming+/290/10-hbnb_filters.sql"
-$ cat 10-dump.sql | mysql -uroot -p
-Enter password: 
-$ HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db python3 -m web_flask.10-hbnb_filters
-* Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
-....
-# test flask web app displays
+0-hello_route.py
+A script that starts a Flask web application:
 
-# add this line into Vagrantfile on host
-config.vm.network :forwarded_port, guest: 5000, host: 5000
+Your web application must be listening on 0.0.0.0, port 5000
+Routes:
+/: display “Hello HBNB!”
+You must use the option strict_slashes=False in your route definition
+1-hbnb_route.py
+A script that starts a Flask web application:
 
-# vagrant reload
+Your web application must be listening on 0.0.0.0, port 5000
+Routes:
+/: display “Hello HBNB!”
+/hbnb: display “HBNB”
+You must use the option strict_slashes=False in your route definition
+2-c_route.py
+A script that starts a Flask web application:
 
-# open connection
-$ HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db python3 -m web_flask.10-hbnb_filters
-* Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
-....
+Your web application must be listening on 0.0.0.0, port 5000
+Routes:
+/: display “Hello HBNB!”
+/hbnb: display “HBNB”
+/c/<text>: display “C ” followed by the value of the text variable (replace underscore _ symbols with a space )
+You must use the option strict_slashes=False in your route definition
+3-python_route.py
+A script that starts a Flask web application:
 
-# check in browser
-0.0.0.0:5000/hbnb or 127.0.0.1:5000/hbnb
+Your web application must be listening on 0.0.0.0, port 5000
+Routes:
+/: display “Hello HBNB!”
+/hbnb: display “HBNB”
+/c/<text>: display “C ” followed by the value of the text variable (replace underscore _ symbols with a space )
+/python/(<text>): display “Python ”, followed by the value of the text variable (replace underscore _ symbols with a space )
+The default value of text is “is cool”
+You must use the option strict_slashes=False in your route definition
+4-number_route.py
+A script that starts a Flask web application:
 
-# or check in CLI
-curl 0.0.0.0:5000/hbnb ; echo ""
-Description of what each file shows:
-File 100-hbnb.py and templates/100-hbnb.html is cummulative of all files. The simple web-app shows how to use Flask to map what we see at each route, which html pages, and how to customize the html templates using Jinja. Each file can be run with python -m [dirname].[filename]. This results in * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit). To test the web app is running, for instance, in another terminal we can run curl 0.0.0.0:5000/number_odd_or_even/89 ; echo "" and should see the return value of our routes.
-Environment
-Languages: Python 3.4.3, HTML, CSS
-OS: Ubuntu 14.04 LTS
-Framework: Flask pip3 install flask
-Style guidelines: W3C-Validator || PEP 8 (version 1.7) for Python 3.5 || Google Style Python Docstrings
+Your web application must be listening on 0.0.0.0, port 5000
+Routes:
+/: display “Hello HBNB!”
+/hbnb: display “HBNB”
+/c/<text>: display “C ” followed by the value of the text variable (replace underscore _ symbols with a space )
+/python/(<text>): display “Python ”, followed by the value of the text variable (replace underscore _ symbols with a space )
+The default value of text is “is cool”
+/number/<n>: display “n is a number” only if n is an integer
+You must use the option strict_slashes=False in your route definition
+5-number_template.py
+A script that starts a Flask web application:
+
+Your web application must be listening on 0.0.0.0, port 5000
+Routes:
+/: display “Hello HBNB!”
+/hbnb: display “HBNB”
+/c/<text>: display “C ” followed by the value of the text variable (replace underscore _ symbols with a space )
+/python/(<text>): display “Python ”, followed by the value of the text variable (replace underscore _ symbols with a space )
+The default value of text is “is cool”
+/number/<n>: display “n is a number” only if n is an integer
+/number_template/<n>: display a HTML page only if n is an integer:
+H1 tag: “Number: n” inside the tag BODY
+You must use the option strict_slashes=False in your route definition
+6-number_odd_or_even.py
+A script that starts a Flask web application:
+
+Your web application must be listening on 0.0.0.0, port 5000
+
+Routes:
+
+/: display “Hello HBNB!”
+/hbnb: display “HBNB”
+/c/<text>: display “C ” followed by the value of the text variable (replace underscore _ symbols with a space )
+/python/(<text>): display “Python ”, followed by the value of the text variable (replace underscore _ symbols with a space )
+The default value of text is “is cool”
+/number/<n>: display “n is a number” only if n is an integer
+/number_template/<n>: display a HTML page only if n is an integer:
+H1 tag: “Number: n” inside the tag BODY
+/number_odd_or_even/<n>: display a HTML page only if n is an integer:
+H1 tag: “Number: n is even|odd” inside the tag BODY
+You must use the option strict_slashes=False in your route definition
+
+7-states_list.py
+A script that starts a Flask web application:
+
+Your web application must be listening on 0.0.0.0, port 5000
+You must use storage for fetching data from the storage engine (FileStorage or DBStorage) => from models import storage and storage.all(...)
+After each request you must remove the current SQLAlchemy Session
+Declare a method to handle @app.teardown_appcontext
+Call in this method storage.close()
+Routes:
+/states_list: display a HTML page: (inside the tagBODY)
+H1 tag: “States”
+UL tag: with the list of all State objects present in DBStorage sorted by name
+You must use the option strict_slashes=False in your route definition
+8-cities_by_states.py
+A script that starts a Flask web application:
+
+Your web application must be listening on 0.0.0.0, port 5000
+You must use storage for fetching data from the storage engine (FileStorage or DBStorage) => from models import storage and storage.all(...)
+To load all cities of a State:
+If your storage engine is DBStorage, you must use cities relationship
+Otherwise, use the public getter method cities
+After each request you must remove the current SQLAlchemy Session:
+Declare a method to handle @app.teardown_appcontext
+Call in this method storage.close()
+Routes:
+/cities_by_states: display a HTML page: (inside the tag BODY)

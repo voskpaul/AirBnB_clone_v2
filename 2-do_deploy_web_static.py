@@ -1,30 +1,62 @@
 #!/usr/bin/python3
-"""
-Fabric script based on the file 1-pack_web_static.py that distributes an
-archive to the web servers
-"""
+'''
+Module contains a fab script to generates a .tgz archive from the contents
+of the web_static
+'''
+from fabric.api import local, env, put, run
+import os
+import time
 
-from fabric.api import put, run, env
-from os.path import exists
+env.user = 'ubuntu'
 env.hosts = ['54.209.92.33', '100.27.4.31']
 
 
-def do_deploy(archive_path):
-    """distributes an archive to the web servers"""
-    if exists(archive_path) is False:
-        return False
+def do_pack():
+    '''
+    A function that generaees a .tgx archive from the web_static folder
+    '''
+    if not os.path.exists('versions'):
+        os.makedirs('versions')
+
+    filename = time.strftime("%Y%m%d%H%M%S")
+    fullpath = "versions/web_static_{}.tgz".format(filename)
     try:
-        file_n = archive_path.split("/")[-1]
-        no_ext = file_n.split(".")[0]
-        path = "/data/web_static/releases/"
-        put(archive_path, '/tmp/')
-        run('mkdir -p {}{}/'.format(path, no_ext))
-        run('tar -xzf /tmp/{} -C {}{}/'.format(file_n, path, no_ext))
-        run('rm /tmp/{}'.format(file_n))
-        run('mv {0}{1}/web_static/* {0}{1}/'.format(path, no_ext))
-        run('rm -rf {}{}/web_static'.format(path, no_ext))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
-        return True
+        local("tar -cvzf {} web_static".format(fullpath))
+        return fullpath
     except:
+        return None
+
+
+def do_deploy(archive_path):
+    '''
+    Distributes an archive to my webservers
+    '''
+    if not os.path.isfile(archive_path):
         return False
+
+    # Upload the archive to the server
+    put(archive_path, '/tmp/')
+
+    # Create directory where we will extract the file to
+    file_name = archive_path.split('/')[-1]  # Get file name
+    dir_path = '/data/web_static/releases/{}'.format(file_name.split('.')[0])
+    run('mkdir -p {}'.format(dir_path))
+
+    # Uncompress the archive to the folder
+    server_archive_path = '/tmp/' + file_name  # Path of archive in server
+    run('tar -xzf {} -C {}'.format(server_archive_path, dir_path))
+
+    # Delete the archive from the web server
+    run('rm -rf {}'.format(server_archive_path))
+
+    # Delete the symbolic link
+    run('rm -rf /data/web_static/current')
+
+    # Move the files from web_static to web_static_<number>
+    run('mv {}/web_static/* {}'.format(dir_path, dir_path))
+    run('rm -rf {}/web_static'.format(dir_path))
+
+    # Create a new symbolic link
+    run('ln -s {} /data/web_static/current'.format(dir_path))
+
+    return True
